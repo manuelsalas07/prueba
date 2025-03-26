@@ -61,7 +61,7 @@
 
     <!-- Campo para ingresar el JWT -->
     <label for="jwt-input">JWT:</label>
-    <input type="text" id="jwt-input" placeholder="Enter JWT" />
+    <input type="text" id="jwt-input" placeholder="Enter JWT" /> <!-- Aquí el usuario puede pegar el JWT -->
 
     <!-- Botón para enviar el JWT -->
     <button id="validate-btn">Validate and Load Payment</button>
@@ -69,6 +69,11 @@
     <!-- Contenedor para el iframe -->
     <div id="iframe-container">
       <iframe id="payment-iframe" src="" frameborder="0"></iframe>
+    </div>
+
+    <!-- Aquí mostramos el JWT generado -->
+    <div id="jwt-display">
+      <p><strong>JWT:</strong> <span id="jwt-text"></span></p>
     </div>
   </div>
 
@@ -81,7 +86,10 @@
         return;
       }
 
-      // Generamos el link de pago usando el JWT de CyberSource
+      // Mostrar el JWT en la página
+      document.getElementById('jwt-text').textContent = jwt;
+
+      // Generamos el link de pago
       const generatedLink = `https://checkout-webpay.cybersource.com/?jwt=${encodeURIComponent(jwt)}`;
 
       // Cargar el enlace en el iframe
