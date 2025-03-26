@@ -13,8 +13,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             try {
-                // Llamamos al backend en el puerto 3001 para obtener el JWT (Capture Context)
-                const response = await fetch("http://localhost:3001/get-capture-context");
+                // Llamamos al backend usando la URL de ngrok para obtener el JWT (Capture Context)
+                const response = await fetch("https://0f68-201-206-191-87.ngrok-free.app/get-capture-context");
                 const data = await response.json();
                 const jwt = data.jwt; // Extrae el JWT
 
