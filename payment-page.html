@@ -4,10 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago de Prueba</title>
+    <script src="https://cdn.cybersource.com/v1/cybersource.min.js"></script>
+    <script>
+        async function fetchJWT() {
+            try {
+                // Hacer una solicitud al backend para obtener el JWT
+                const response = await fetch("http://localhost:3001/get-capture-context");
+                if (response.ok) {
+                    const data = await response.json();
+                    const jwt = data.jwt;
+
+                    // Llamar a la función de CyberSource para configurar el formulario con el JWT
+                    setupPayment(jwt);
+                } else {
+                    console.error("Error al obtener JWT:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Error al obtener JWT:", error);
+            }
+        }
+
+        function setupPayment(jwt) {
+            // Aquí se configura el formulario de pago de CyberSource usando el JWT obtenido
+            const paymentForm = document.createElement("form");
+            paymentForm.action = "https://secure.checkout.cybersource.com/checkout/payments";
+            paymentForm.method = "POST";
+
+            // Agregar el JWT al formulario como un campo oculto
+            const jwtField = document.createElement("input");
+            jwtField.type = "hidden";
+            jwtField.name = "jwt";
+            jwtField.value = jwt;
+            paymentForm.appendChild(jwtField);
+
+            // Agregar otros campos de información de pago necesarios (por ejemplo, monto, descripción, etc.)
+            const amountField = document.createElement("input");
+            amountField.type = "hidden";
+            amountField.name = "amount";
+            amountField.value = "10.00"; // Monto de ejemplo
+            paymentForm.appendChild(amountField);
+
+            const currencyField = document.createElement("input");
+            currencyField.type = "hidden";
+            currencyField.name = "currency";
+            currencyField.value = "USD"; // Moneda de ejemplo
+            paymentForm.appendChild(currencyField);
+
+            // Agregar el formulario al cuerpo del documento
+            document.body.appendChild(paymentForm);
+
+            // Enviar el formulario de pago de CyberSource
+            paymentForm.submit();
+        }
+
+        // Llamar a la función fetchJWT cuando la página cargue
+        window.onload = fetchJWT;
+    </script>
 </head>
 <body>
     <h1>Bienvenido al Pago de Prueba</h1>
     <p>Por favor, complete su información de pago aquí.</p>
-    <!-- Puedes integrar aquí el formulario de pago de CyberSource -->
 </body>
 </html>
