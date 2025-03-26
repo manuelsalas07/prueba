@@ -16,6 +16,7 @@
                 // Llamamos al backend usando la URL de ngrok para obtener el JWT (Capture Context)
                 const response = await fetch("https://163c-201-206-191-87.ngrok-free.app/get-jwt");
                 const data = await response.json();
+                console.log("Respuesta del servidor:", data);
                 const jwt = data.jwt; // Extrae el JWT
 
                 // Inicializa el Unified Checkout con el JWT
