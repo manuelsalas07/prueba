@@ -18,7 +18,7 @@
             fetch('https://163c-201-206-191-87.ngrok-free.app/get-jwt') // Usa la URL de ngrok aquí
                 .then(response => response.json())
                 .then(data => {
-                    if (data.jwt) {
+                    if (data) {
                         // Crea el enlace de pago
                         const paymentUrl = `https://apitest.cybersource.com/up/v1/capture-contexts?jwt=${data.jwt}`;
                         // Redirige al usuario al enlace de pago
