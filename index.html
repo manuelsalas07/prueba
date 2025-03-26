@@ -18,6 +18,9 @@
             fetch('https://163c-201-206-191-87.ngrok-free.app/get-jwt') // Usa la URL de ngrok aquí
                 .then(response => response.json())
                 .then(data => {
+                    
+                    console.log("Respuesta del servidor:", data);
+                    
                     if (data && data.jwt) {
                         console.log('JWT recibido:', data.jwt); // Verifica en la consola si el JWT se está recibiendo
                         // Crea el enlace de pago
