@@ -15,10 +15,13 @@
     <script>
         document.getElementById("payButton").addEventListener("click", function() {
             // Llama a tu servidor para obtener el JWT
+            
+            console.log("llamando a get-jwt");
             fetch('https://163c-201-206-191-87.ngrok-free.app/get-jwt') // Usa la URL de ngrok aquí
                 .then(response => response.json())
                 .then(data => {
                     
+                    console.log("Respuesta del servidor");
                     console.log("Respuesta del servidor:", data);
                     
                     if (data && data.jwt) {
