@@ -8,13 +8,16 @@
 </head>
 <body>
     <h1>Bienvenido a la página de pago</h1>
-    <p>Por favor, complete la información de pago.</p>
+    <p>Por favor, haga clic en el botón para pagar.</p>
+
+    <!-- Botón para iniciar el proceso de pago -->
+    <button id="start-payment">Iniciar Pago</button>
 
     <!-- Contenedor para el formulario de pago -->
     <div id="payment-container"></div>
 
     <script>
-        async function initializePaymentForm() {
+        document.getElementById("start-payment").addEventListener("click", async function() {
             try {
                 // Obtener el Capture Context desde el backend
                 const response = await fetch("http://localhost:3001/payment-context");
@@ -41,12 +44,15 @@
                         alert("Hubo un problema con el pago.");
                     }
                 }).mount("#payment-container"); // Renderizar el formulario en el div
+
+                // Ocultar el botón después de iniciar el pago
+                document.getElementById("start-payment").style.display = "none";
+
             } catch (error) {
                 console.error("Error al inicializar el pago:", error);
+                alert("Error al iniciar el pago.");
             }
-        }
-
-        document.addEventListener("DOMContentLoaded", initializePaymentForm);
+        });
     </script>
 </body>
 </html>
