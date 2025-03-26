@@ -81,8 +81,8 @@
         return;
       }
 
-      // Generamos el link de pago, en este caso, simulamos un enlace con el JWT
-      const generatedLink = `https://yourpaymentgateway.com/payment?jwt=${encodeURIComponent(jwt)}`;
+      // Generamos el link de pago usando el JWT de CyberSource
+      const generatedLink = `https://checkout-webpay.cybersource.com/?jwt=${encodeURIComponent(jwt)}`;
 
       // Cargar el enlace en el iframe
       const iframe = document.getElementById('payment-iframe');
