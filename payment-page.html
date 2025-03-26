@@ -42,32 +42,33 @@
     button:hover {
       background-color: #45a049;
     }
-    #link-container {
+    #iframe-container {
       margin-top: 20px;
+      width: 100%;
+      height: 500px;
+      display: none;
+      border: 1px solid #ccc;
     }
-    #link {
-      color: #007BFF;
-      text-decoration: none;
-    }
-    #link:hover {
-      text-decoration: underline;
+    iframe {
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
 <body>
   <div id="payment-container">
-    <h1>Enter JWT and Get Link</h1>
+    <h1>Enter JWT and Get Payment Link</h1>
 
     <!-- Campo para ingresar el JWT -->
     <label for="jwt-input">JWT:</label>
     <input type="text" id="jwt-input" placeholder="Enter JWT" />
 
     <!-- Botón para enviar el JWT -->
-    <button id="validate-btn">Validate and Get Link</button>
+    <button id="validate-btn">Validate and Load Payment</button>
 
-    <!-- Div para mostrar el enlace resultante -->
-    <div id="link-container">
-      <p>Link: <a id="link" href="#" target="_blank">No link generated yet</a></p>
+    <!-- Contenedor para el iframe -->
+    <div id="iframe-container">
+      <iframe id="payment-iframe" src="" frameborder="0"></iframe>
     </div>
   </div>
 
@@ -80,13 +81,16 @@
         return;
       }
 
-      // Aquí generamos un link de ejemplo basado en el JWT (esto es solo una simulación)
+      // Generamos el link de pago, en este caso, simulamos un enlace con el JWT
       const generatedLink = `https://yourpaymentgateway.com/payment?jwt=${encodeURIComponent(jwt)}`;
 
-      // Actualizamos el enlace generado
-      const linkElement = document.getElementById('link');
-      linkElement.href = generatedLink;
-      linkElement.textContent = generatedLink; // Mostrar el link como texto
+      // Cargar el enlace en el iframe
+      const iframe = document.getElementById('payment-iframe');
+      const iframeContainer = document.getElementById('iframe-container');
+      iframe.src = generatedLink;
+
+      // Mostrar el iframe
+      iframeContainer.style.display = 'block';
     });
   </script>
 </body>
