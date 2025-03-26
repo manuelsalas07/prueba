@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Pago</title>
+    <!-- Cargar la biblioteca axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
 
@@ -13,28 +15,31 @@
     <button id="payButton">Pagar ahora</button>
 
     <script>
+        // Agregar un evento al botón de pago
         document.getElementById("payButton").addEventListener("click", function() {
-            // Llama a tu servidor para obtener el JWT
-            
-            console.log("llamando a get-jwt");
-            fetch('https://2786-201-206-191-87.ngrok-free.app/get-jwt') // Usa la URL de ngrok aquí
-                .then(response => response.json())
-                .then(data => {
-                    
-                    console.log("Respuesta del servidor");
+            console.log("Llamando a get-jwt");
+
+            // Realizar la solicitud GET usando axios
+            axios.get('https://2786-201-206-191-87.ngrok-free.app/get-jwt')
+                .then(function(response) {
+                    const data = response.data;
                     console.log("Respuesta del servidor:", data);
-                    
+
+                    // Verificar si se recibió el JWT
                     if (data && data.jwt) {
-                        console.log('JWT recibido:', data.jwt); // Verifica en la consola si el JWT se está recibiendo
-                        // Crea el enlace de pago
+                        console.log('JWT recibido:', data.jwt);  // Verificar en la consola si el JWT se está recibiendo
+
+                        // Crear el enlace de pago
                         const paymentUrl = `https://apitest.cybersource.com/up/v1/capture-contexts?jwt=${data.jwt}`;
-                        // Redirige al usuario al enlace de pago
+
+                        // Redirigir al usuario al enlace de pago
                         window.location.href = paymentUrl;
                     } else {
                         alert('No se pudo obtener el JWT o el formato es incorrecto');
                     }
                 })
-                .catch(error => {
+                .catch(function(error) {
+                    // Manejar errores
                     console.error('Error al obtener JWT:', error);
                     alert('Error al obtener JWT');
                 });
