@@ -1,45 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Page</title>
+    <title>Página de Pago</title>
+    <script src="https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/visaSdk.js"></script>
 </head>
 <body>
-    <h1>Make Payment</h1>
-    <button id="payButton">Pay with CyberSource UCheckOut</button>
+    <h1>Bienvenido a la página de pago</h1>
+    <p>Por favor, complete la información de pago.</p>
+
+    <!-- Contenedor para el formulario de pago -->
+    <div id="payment-container"></div>
 
     <script>
-        document.getElementById('payButton').addEventListener('click', function(event) {
-            event.preventDefault();  // Evita que el formulario sea enviado
+        async function initializePaymentForm() {
+            try {
+                // Obtener el Capture Context desde el backend
+                const response = await fetch("http://localhost:3001/payment-context");
+                const data = await response.json();
+                const captureContext = data.captureContext;
 
-            // Realiza la solicitud al backend para obtener el contexto de pago
-            fetch('http://localhost:3001/payment-context', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
+                if (!captureContext) {
+                    throw new Error("No se recibió un Capture Context válido.");
                 }
-            })
-            .then(response => response.json())  // Parsear la respuesta a JSON
-            .then(data => {
-                if (data && data.captureContext) {
-                    console.log('Redirecting to:', data.captureContext);
-                    console.log('JWT Token:', data.jwt);
 
-                    // Guardar JWT en localStorage para futura referencia (opcional)
-                    localStorage.setItem('cybersource_jwt', data.jwt);
+                // Inicializar el widget de pago con el Capture Context
+                window.VisaCheckout.create({
+                    captureContext: captureContext,  // Aquí se usa el Capture Context recibido del backend
+                    paymentRequest: {
+                        currencyCode: "USD",
+                        total: "21.00"
+                    },
+                    onSuccess: function(paymentData) {
+                        console.log("Pago exitoso:", paymentData);
+                        alert("Pago realizado con éxito.");
+                    },
+                    onError: function(errorData) {
+                        console.error("Error en el pago:", errorData);
+                        alert("Hubo un problema con el pago.");
+                    }
+                }).mount("#payment-container"); // Renderizar el formulario en el div
+            } catch (error) {
+                console.error("Error al inicializar el pago:", error);
+            }
+        }
 
-                    // Redirigir a la URL de pago proporcionada por CyberSource
-                    window.location.href = data.captureContext; // Esta URL es la página de CyberSource
-                } else {
-                    alert('Error: No captureContext received.');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching payment context:', error);
-                alert('Error fetching payment context.');
-            });
-        });
+        document.addEventListener("DOMContentLoaded", initializePaymentForm);
     </script>
 </body>
-</html> 
+</html>
