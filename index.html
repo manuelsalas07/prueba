@@ -15,11 +15,12 @@
     <script>
         document.getElementById("payButton").addEventListener("click", function() {
             // Llama a tu servidor para obtener el JWT
-            fetch('https://163c-201-206-191-87.ngrok-free.app/get-jwt')
+            fetch('https://163c-201-206-191-87.ngrok-free.app/get-jwt') // Usa la URL de ngrok aquí
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.jwt) {
-                        // Crea el enlace de pago con el JWT
+                        console.log('JWT recibido:', data.jwt); // Verifica en la consola si el JWT se está recibiendo
+                        // Crea el enlace de pago
                         const paymentUrl = `https://apitest.cybersource.com/up/v1/capture-contexts?jwt=${data.jwt}`;
                         // Redirige al usuario al enlace de pago
                         window.location.href = paymentUrl;
