@@ -1,58 +1,103 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Pago</title>
-    <script src="https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/visaSdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #payment-container {
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #link-container {
+      margin-top: 20px;
+    }
+    #link {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    #link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <h1>Bienvenido a la página de pago</h1>
-    <p>Por favor, haga clic en el botón para pagar.</p>
+  <div id="payment-container">
+    <h1>Enter JWT and Get Link</h1>
 
-    <!-- Botón para iniciar el proceso de pago -->
-    <button id="start-payment">Iniciar Pago</button>
+    <!-- Campo para ingresar el JWT -->
+    <label for="jwt-input">JWT:</label>
+    <input type="text" id="jwt-input" placeholder="Enter JWT" />
 
-    <!-- Contenedor para el formulario de pago -->
-    <div id="payment-container"></div>
+    <!-- Botón para enviar el JWT -->
+    <button id="validate-btn">Validate and Get Link</button>
 
-    <script>
-        document.getElementById("start-payment").addEventListener("click", async function() {
-            try {
-                // Obtener el Capture Context desde el backend
-                const response = await fetch("http://localhost:3001/payment-context");
-                const data = await response.json();
-                const captureContext = data.captureContext;
+    <!-- Div para mostrar el enlace resultante -->
+    <div id="link-container">
+      <p>Link: <a id="link" href="#" target="_blank">No link generated yet</a></p>
+    </div>
+  </div>
 
-                if (!captureContext) {
-                    throw new Error("No se recibió un Capture Context válido.");
-                }
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    document.getElementById('validate-btn').addEventListener('click', async function() {
+      const jwt = document.getElementById('jwt-input').value;
 
-                // Inicializar el widget de pago con el Capture Context
-                window.VisaCheckout.create({
-                    captureContext: captureContext,  // Aquí se usa el Capture Context recibido del backend
-                    paymentRequest: {
-                        currencyCode: "USD",
-                        total: "21.00"
-                    },
-                    onSuccess: function(paymentData) {
-                        console.log("Pago exitoso:", paymentData);
-                        alert("Pago realizado con éxito.");
-                    },
-                    onError: function(errorData) {
-                        console.error("Error en el pago:", errorData);
-                        alert("Hubo un problema con el pago.");
-                    }
-                }).mount("#payment-container"); // Renderizar el formulario en el div
+      if (!jwt) {
+        alert('Please enter a JWT');
+        return;
+      }
 
-                // Ocultar el botón después de iniciar el pago
-                document.getElementById("start-payment").style.display = "none";
-
-            } catch (error) {
-                console.error("Error al inicializar el pago:", error);
-                alert("Error al iniciar el pago.");
-            }
+      try {
+        // Enviar el JWT al servidor para generar el enlace
+        const response = await axios.post('https://tu-servidor.com/generate-link', {
+          jwt: jwt
         });
-    </script>
+
+        // Obtener el enlace y actualizar el campo en la página
+        const link = response.data.link;
+        const linkElement = document.getElementById('link');
+        linkElement.href = link;
+        linkElement.textContent = link; // Mostrar el link como texto
+
+      } catch (error) {
+        console.error('Error generating link:', error);
+        alert('Error generating link, please try again.');
+      }
+    });
+  </script>
 </body>
 </html>
