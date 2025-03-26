@@ -71,9 +71,8 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script>
-    document.getElementById('validate-btn').addEventListener('click', async function() {
+    document.getElementById('validate-btn').addEventListener('click', function() {
       const jwt = document.getElementById('jwt-input').value;
 
       if (!jwt) {
@@ -81,22 +80,13 @@
         return;
       }
 
-      try {
-        // Enviar el JWT al servidor para generar el enlace
-        const response = await axios.post('https://tu-servidor.com/generate-link', {
-          jwt: jwt
-        });
+      // Aquí generamos un link de ejemplo basado en el JWT (esto es solo una simulación)
+      const generatedLink = `https://yourpaymentgateway.com/payment?jwt=${encodeURIComponent(jwt)}`;
 
-        // Obtener el enlace y actualizar el campo en la página
-        const link = response.data.link;
-        const linkElement = document.getElementById('link');
-        linkElement.href = link;
-        linkElement.textContent = link; // Mostrar el link como texto
-
-      } catch (error) {
-        console.error('Error generating link:', error);
-        alert('Error generating link, please try again.');
-      }
+      // Actualizamos el enlace generado
+      const linkElement = document.getElementById('link');
+      linkElement.href = generatedLink;
+      linkElement.textContent = generatedLink; // Mostrar el link como texto
     });
   </script>
 </body>
