@@ -1,105 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Page</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    #payment-container {
-      background-color: white;
-      padding: 20px;
-      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-      width: 400px;
-      text-align: center;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    #iframe-container {
-      margin-top: 20px;
-      width: 100%;
-      height: 500px;
-      display: none;
-      border: 1px solid #ccc;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Pago</title>
+    <script src="https://unpkg.com/@cybersource/unifiedcheckout-web"></script>
 </head>
 <body>
-  <div id="payment-container">
-    <h1>Enter JWT and Get Payment Link</h1>
-
-    <!-- Campo para ingresar el JWT -->
-    <label for="jwt-input">JWT:</label>
-    <input type="text" id="jwt-input" placeholder="Enter JWT" /> <!-- Aquí el usuario puede pegar el JWT -->
-
-    <!-- Botón para enviar el JWT -->
-    <button id="validate-btn">Validate and Load Payment</button>
-
-    <!-- Contenedor para el iframe -->
-    <div id="iframe-container">
-      <iframe id="payment-iframe" src="" frameborder="0"></iframe>
-    </div>
-
-    <!-- Aquí mostramos el JWT generado -->
-    <div id="jwt-display">
-      <p><strong>JWT:</strong> <span id="jwt-text"></span></p>
-    </div>
-  </div>
-
-  <script>
-    document.getElementById('validate-btn').addEventListener('click', function() {
-      const jwt = document.getElementById('jwt-input').value;
-
-      if (!jwt) {
-        alert('Please enter a JWT');
-        return;
-      }
-
-      // Mostrar el JWT en la página
-      document.getElementById('jwt-text').textContent = jwt;
-
-      // Generamos el link de pago
-      const generatedLink = `https://checkout-webpay.cybersource.com/?jwt=${encodeURIComponent(jwt)}`;
-
-      // Cargar el enlace en el iframe
-      const iframe = document.getElementById('payment-iframe');
-      const iframeContainer = document.getElementById('iframe-container');
-      iframe.src = generatedLink;
-
-      // Mostrar el iframe
-      iframeContainer.style.display = 'block';
-    });
-  </script>
+    <h2>Pagar con CyberSource</h2>
+    <div id="cybersource-container"></div> <!-- Aquí se mostrará el formulario de pago -->
+    <script src="checkout.js"></script> <!-- Carga el script de CyberSource -->
 </body>
 </html>
