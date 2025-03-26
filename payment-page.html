@@ -9,6 +9,26 @@
 <body>
     <h2>Pagar con CyberSource</h2>
     <div id="cybersource-container"></div> <!-- Aquí se mostrará el formulario de pago -->
-    <script src="checkout.js"></script> <!-- Carga el script de CyberSource -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                // Llamamos al backend en el puerto 3001 para obtener el JWT (Capture Context)
+                const response = await fetch("http://localhost:3001/get-capture-context");
+                const data = await response.json();
+                const jwt = data.jwt; // Extrae el JWT
+
+                // Inicializa el Unified Checkout con el JWT
+                const checkout = new UnifiedCheckout();
+                checkout.init({
+                    container: "#cybersource-container",  // Div donde se mostrará el formulario
+                    captureContext: jwt,                  // El JWT obtenido del backend
+                });
+
+            } catch (error) {
+                console.error("Error al cargar el formulario de pago:", error);
+            }
+        });
+    </script>
 </body>
 </html>
