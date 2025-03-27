@@ -6,6 +6,8 @@
     <title>Página de Pago</title>
     <!-- Cargar la biblioteca axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Cargar el script del widget de pago de CyberSource -->
+    <script src="https://www.sandbox.cybersource.com/checkout/checkout.js"></script>
 </head>
 <body>
 
@@ -31,17 +33,33 @@
                         if (data && data.jwt) {
                             console.log('JWT recibido:', data.jwt);  // Verificar en la consola si el JWT se está recibiendo
 
-                            // Crear el enlace de pago para Unified Checkout (esto es solo un ejemplo, ajusta la URL según tu caso)
-                            const paymentUrl = `https://www.sandbox.cybersource.com/checkout/` + `?jwt=${data.jwt}`;
+                            // Configuración del cliente (pasar el JWT al widget de pago de CyberSource)
+                            const config = {
+                                jwt: data.jwt,
+                                container: '#payButton',  // Referencia al botón en el HTML
+                                styles: {
+                                    width: '100%',
+                                    height: '50px',
+                                    color: 'white',
+                                    backgroundColor: '#4CAF50'
+                                }
+                            };
 
-                            // Redirigir al usuario al enlace de pago
-                            window.location.href = paymentUrl;
+                            // Llamar al método de pago de CyberSource Unified Checkout
+                            window.Cybersource.checkout(config).then(function(response) {
+                                // Aquí puedes manejar la respuesta del proceso de pago (si es necesario)
+                                console.log("Resultado del pago: ", response);
+                            }).catch(function(error) {
+                                // Manejo de errores de pago
+                                console.error("Error en el proceso de pago: ", error);
+                                alert('Error al procesar el pago');
+                            });
                         } else {
                             alert('No se pudo obtener el JWT o el formato es incorrecto');
                         }
                     })
                     .catch(function(error) {
-                        // Manejar errores
+                        // Manejar errores de la solicitud GET
                         console.error('Error al obtener JWT:', error);
                         alert('Error al obtener JWT');
                     });
