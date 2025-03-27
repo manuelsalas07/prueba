@@ -1,50 +1,44 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Pago</title>
-    <!-- Cargar la biblioteca axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
-<body>
+<script src="https://www.sandbox.cybersource.com/checkout.js"></script>
+<script>
+    document.getElementById("payButton").addEventListener("click", function() {
+        console.log("Llamando a get-jwt");
 
-    <h1>Pago con CyberSource</h1>
-    
-    <!-- Botón para iniciar el pago -->
-    <button id="payButton">Pagar ahora</button>
+        // Realizar la solicitud GET usando axios
+        axios.get('https://d4a1-201-206-191-87.ngrok-free.app/get-jwt')
+            .then(function(response) {
+                const data = response.data;
+                console.log("Respuesta del servidor:", data);
 
-    <script>
-        // Agregar un evento al botón de pago
-        document.getElementById("payButton").addEventListener("click", function() {
-            console.log("Llamando a get-jwt");
+                // Verificar si se recibió el JWT
+                if (data && data.jwt) {
+                    console.log('JWT recibido:', data.jwt);  // Verificar en la consola si el JWT se está recibiendo
 
-            // Realizar la solicitud GET usando axios
-            axios.get('https://d4a1-201-206-191-87.ngrok-free.app/get-jwt')
-                .then(function(response) {
-                    const data = response.data;
-                    console.log("Respuesta del servidor:", data);
+                    // Inicializar el botón de pago de CyberSource
+                    CyberSourceCheckout.configure({
+                        jwt: data.jwt,
+                        paymentTypes: ['CREDIT_CARD'],
+                        orderAmount: '21.00',  // Asegúrate de que el monto coincida con el JWT
+                        orderCurrency: 'USD',
+                        onSuccess: function(response) {
+                            // Aquí manejas la respuesta exitosa (por ejemplo, puedes redirigir o mostrar un mensaje)
+                            console.log('Pago exitoso', response);
+                        },
+                        onError: function(error) {
+                            // Aquí manejas errores en caso de que algo falle en el proceso de pago
+                            console.error('Error en el pago', error);
+                        }
+                    });
 
-                    // Verificar si se recibió el JWT
-                    if (data && data.jwt) {
-                        console.log('JWT recibido:', data.jwt);  // Verificar en la consola si el JWT se está recibiendo
-
-                        // Crear el enlace de pago para Unified Checkout (esto es solo un ejemplo, ajusta la URL según tu caso)
-                        const paymentUrl = `https://www.sandbox.cybersource.com/checkout/` + `?jwt=${data.jwt}`;
-
-                        // Redirigir al usuario al enlace de pago
-                        window.location.href = paymentUrl;
-                    } else {
-                        alert('No se pudo obtener el JWT o el formato es incorrecto');
-                    }
-                })
-                .catch(function(error) {
-                    // Manejar errores
-                    console.error('Error al obtener JWT:', error);
-                    alert('Error al obtener JWT');
-                });
-        });
-    </script>
-
-</body>
-</html>
+                    // Abre la ventana del widget de pago
+                    CyberSourceCheckout.show();
+                } else {
+                    alert('No se pudo obtener el JWT o el formato es incorrecto');
+                }
+            })
+            .catch(function(error) {
+                // Manejar errores
+                console.error('Error al obtener JWT:', error);
+                alert('Error al obtener JWT');
+            });
+    });
+</script>
