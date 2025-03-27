@@ -29,8 +29,8 @@
                     if (data && data.jwt) {
                         console.log('JWT recibido:', data.jwt);  // Verificar en la consola si el JWT se está recibiendo
 
-                        // Crear el enlace de pago
-                        const paymentUrl = `https://apitest.cybersource.com/up/v1/capture-contexts?jwt=${data.jwt}`;
+                        // Crear el enlace de pago para Unified Checkout (esto es solo un ejemplo, ajusta la URL según tu caso)
+                        const paymentUrl = `https://www.sandbox.cybersource.com/checkout/` + `?jwt=${data.jwt}`;
 
                         // Redirigir al usuario al enlace de pago
                         window.location.href = paymentUrl;
